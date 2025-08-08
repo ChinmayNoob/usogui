@@ -2,8 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { signIn } from "@/lib/auth-client";
+import { signIn, signUp } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { Icons } from "@/components/shared/icons";
@@ -21,6 +23,11 @@ export default function AuthCard({
 }) {
     const [githubLoading, setGithubLoading] = useState(false);
     const [googleLoading, setGoogleLoading] = useState(false);
+    const [emailLoading, setEmailLoading] = useState(false);
+
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
     const cardVariants = {
         hidden: {
@@ -73,10 +80,119 @@ export default function AuthCard({
                 </CardHeader>
                 <CardContent>
                     <motion.div className="grid gap-4" variants={itemVariants}>
+                        <motion.form
+                            variants={itemVariants}
+                            onSubmit={async (e) => {
+                                e.preventDefault();
+                                setEmailLoading(true);
+                                try {
+                                    if (mode === "sign-in") {
+                                        await signIn.email(
+                                            {
+                                                email,
+                                                password,
+                                                rememberMe: true,
+                                                callbackURL: "/dashboard",
+                                            },
+                                            {
+                                                onError: (ctx) => {
+                                                    alert(ctx.error.message ?? "Failed to sign in");
+                                                },
+                                                onResponse: () => {
+                                                    setEmailLoading(false);
+                                                },
+                                            }
+                                        );
+                                    } else {
+                                        await signUp.email(
+                                            {
+                                                name,
+                                                email,
+                                                password,
+                                                callbackURL: "/dashboard",
+                                            },
+                                            {
+                                                onError: (ctx: any) => {
+                                                    alert(ctx.error.message ?? "Failed to sign up");
+                                                },
+                                                onResponse: () => {
+                                                    setEmailLoading(false);
+                                                },
+                                            }
+                                        );
+                                    }
+                                } catch (err) {
+                                    setEmailLoading(false);
+                                }
+                            }}
+                            className="grid gap-3"
+                        >
+                            {mode === "sign-up" && (
+                                <div className="grid gap-2">
+                                    <Label htmlFor="name">Name</Label>
+                                    <Input
+                                        id="name"
+                                        type="text"
+                                        placeholder="John Doe"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                            )}
+                            <div className="grid gap-2">
+                                <Label htmlFor="email">Email</Label>
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    placeholder="john.doe@example.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="password">Password</Label>
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <Button type="submit" size="lg" className="w-full" disabled={emailLoading}>
+                                <AnimatePresence mode="wait">
+                                    {emailLoading ? (
+                                        <motion.div
+                                            key="loading"
+                                            initial={{ opacity: 0, scale: 0.8 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.8 }}
+                                            transition={{ duration: 0.2 }}
+                                            className="mr-2"
+                                        >
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                        </motion.div>
+                                    ) : null}
+                                </AnimatePresence>
+                                {mode === "sign-in" ? "Continue with Email" : "Create Account"}
+                            </Button>
+                        </motion.form>
+
                         <div className={cn(
                             "w-full gap-2 flex items-center",
                             "justify-between flex-col"
                         )}>
+                            <div className="relative w-full text-center">
+                                <div className="absolute inset-0 flex items-center">
+                                    <span className="w-full border-t border-dashed" />
+                                </div>
+                                <div className="relative inline-block bg-background px-2 text-xs text-muted-foreground">
+                                    Or continue with
+                                </div>
+                            </div>
                             <motion.div
                                 variants={itemVariants}
                                 whileHover={{ scale: 1.02 }}
