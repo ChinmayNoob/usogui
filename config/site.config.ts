@@ -4,7 +4,7 @@ export const siteConfig: SiteConfig = {
     name: "Usogui",
     title: "Usogui - Better Auth Nextjs Template",
     description: "Modern Next.js 15 stack with Better-Auth, Drizzle ORM, PostgreSQL, Shadcn UI, and Tailwind v4 for fast, secure web app development.",
-    origin: "",
+    origin: "https://usogui.vercel.app",
     keywords: [
         "Next.js 15",
         "Authentication",
@@ -16,13 +16,13 @@ export const siteConfig: SiteConfig = {
         "TypeScript",
         "Full-Stack Template"
     ],
-    og: "",
+    og: "https://usogui.vercel.app/og.png",
     creator: {
-        name: "",
-        url: "",
+        name: "ChinmayNoob",
+        url: "https://chinmaynoob.vercel.app",
     },
     socials: {
-        github: "",
-        x: "",
+        github: "https://github.com/ChinmayNoob/usogui.git",
+        x: "https://x.com/Chinmay0408",
     }
 }
