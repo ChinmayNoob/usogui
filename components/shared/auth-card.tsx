@@ -117,7 +117,7 @@ export default function AuthCard({
                     >
                         {mode === "sign-in" ? (
                             <>
-                                Don't have an account?{" "}
+                                Don&apos;t have an account?{" "}
                                 <motion.span
                                     whileHover={{ scale: 1.05 }}
                                     className="inline-block"
