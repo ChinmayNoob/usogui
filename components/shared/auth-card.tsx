@@ -112,7 +112,7 @@ export default function AuthCard({
                                                 callbackURL: "/dashboard",
                                             },
                                             {
-                                                onError: (ctx: any) => {
+                                                onError: (ctx) => {
                                                     alert(ctx.error.message ?? "Failed to sign up");
                                                 },
                                                 onResponse: () => {
@@ -121,7 +121,7 @@ export default function AuthCard({
                                             }
                                         );
                                     }
-                                } catch (err) {
+                                } catch {
                                     setEmailLoading(false);
                                 }
                             }}
@@ -333,7 +333,7 @@ const SignInButton = ({
                             callbackURL: callbackURL
                         },
                         {
-                            onRequest: (ctx) => {
+                            onRequest: () => {
                                 setLoading(true);
                             },
                         },
